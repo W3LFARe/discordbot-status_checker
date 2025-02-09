@@ -31,20 +31,23 @@ jobs:
       id: check_status
       run: |
         PSN_STATUS=$(curl -s https://status.playstation.com/data/statuses/region/SCEA.json | jq -r '.status')
-        echo "::set-output name=status::$PSN_STATUS"
+        echo "PSN_STATUS=$PSN_STATUS" >> $GITHUB_ENV
+        echo "PSN_STATUS: $PSN_STATUS"
 
     - name: Update Discord Channel Color (Green)
-      if: steps.check_status.outputs.status == 'up'
+      if: env.PSN_STATUS == 'up'
       run: |
-        curl -X PATCH "https://discord.com/api/v9/channels/${{ secrets.PSN_DISCORD_CHANNEL_ID }}" \
+        RESPONSE=$(curl -X PATCH "https://discord.com/api/v9/channels/${{ secrets.PSN_DISCORD_CHANNEL_ID }}" \
         -H "Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}" \
         -H "Content-Type: application/json" \
-        -d '{"color": 65280}' # Green color
+        -d '{"color": 65280}') # Green color
+        echo "Green Response: $RESPONSE"
 
     - name: Update Discord Channel Color (Red)
-      if: steps.check_status.outputs.status != 'up'
+      if: env.PSN_STATUS != 'up'
       run: |
-        curl -X PATCH "https://discord.com/api/v9/channels/${{ secrets.PSN_DISCORD_CHANNEL_ID }}" \
+        RESPONSE=$(curl -X PATCH "https://discord.com/api/v9/channels/${{ secrets.PSN_DISCORD_CHANNEL_ID }}" \
         -H "Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}" \
         -H "Content-Type: application/json" \
-        -d '{"color": 16711680}' # Red color
+        -d '{"color": 16711680}') # Red color
+        echo "Red Response: $RESPONSE"

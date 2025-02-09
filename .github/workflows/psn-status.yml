@@ -24,13 +24,13 @@ jobs:
     - name: Fetch PlayStation Network Status
       id: fetch_status
       run: |
-        PSN_RESPONSE=$(curl -s https://status.playstation.com/data/statuses/region/US.json)
+        PSN_RESPONSE=$(curl -s https://status.playstation.com/data/statuses/region/SCEA.json)
         echo "Response: $PSN_RESPONSE"
 
     - name: Check PlayStation Network Status
       id: check_status
       run: |
-        PSN_STATUS=$(curl -s https://status.playstation.com/data/statuses/region/US.json | jq -r '.status')
+        PSN_STATUS=$(curl -s https://status.playstation.com/data/statuses/region/SCEA.json | jq -r '.status')
         echo "::set-output name=status::$PSN_STATUS"
 
     - name: Update Discord Channel Color (Green)

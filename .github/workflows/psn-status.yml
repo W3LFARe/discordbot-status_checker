@@ -21,6 +21,12 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Fetch PlayStation Network Status
+      id: fetch_status
+      run: |
+        PSN_RESPONSE=$(curl -s https://status.playstation.com/data/statuses/region/US.json)
+        echo "Response: $PSN_RESPONSE"
+
     - name: Check PlayStation Network Status
       id: check_status
       run: |
@@ -42,4 +48,3 @@ jobs:
         -H "Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}" \
         -H "Content-Type: application/json" \
         -d '{"color": 16711680}' # Red color
-

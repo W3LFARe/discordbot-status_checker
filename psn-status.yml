@@ -9,13 +9,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
     - name: Check PlayStation Network Status
       id: check_status
       run: |
         PSN_STATUS=$(curl -s https://status.playstation.com/data/statuses/region/US.json | jq -r '.status')
         echo "::set-output name=status::$PSN_STATUS"
 
-    - name: Update PSN Discord Channel Color (Green)
+    - name: Update Discord Channel Color (Green)
       if: steps.check_status.outputs.status == 'up'
       run: |
         curl -X PATCH "https://discord.com/api/v9/channels/${{ secrets.PSN_DISCORD_CHANNEL_ID }}" \
@@ -23,7 +34,7 @@ jobs:
         -H "Content-Type: application/json" \
         -d '{"color": 65280}' # Green color
 
-    - name: Update PSN Discord Channel Color (Red)
+    - name: Update Discord Channel Color (Red)
       if: steps.check_status.outputs.status != 'up'
       run: |
         curl -X PATCH "https://discord.com/api/v9/channels/${{ secrets.PSN_DISCORD_CHANNEL_ID }}" \

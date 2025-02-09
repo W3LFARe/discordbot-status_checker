@@ -1,0 +1,13 @@
+{
+    "name": "discordbot-status_checker",
+    "version": "1.0.0",
+    "description": "A Discord bot for checking PlayStation Network status",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"
+    },
+    "dependencies": {
+      "discord.js": "^13.0.0"
+    }
+  }
+  
